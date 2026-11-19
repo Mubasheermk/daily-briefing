@@ -185,9 +185,16 @@ const firebaseConfig = {
   messagingSenderId: "__FIREBASE_SENDER_ID__",
   appId: "__FIREBASE_APP_ID__"
 };
-const fbApp = initializeApp(firebaseConfig);
-const auth = getAuth(fbApp);
-const db = getFirestore(fbApp);
+// If the config is missing or invalid, Firebase throws here. Catch it so the
+// briefing still loads with browser-only settings.
+let auth = null, db = null;
+try {
+  const fbApp = initializeApp(firebaseConfig);
+  auth = getAuth(fbApp);
+  db = getFirestore(fbApp);
+} catch (e) {
+  console.warn('Firebase not configured, using local settings only:', e);
+}
 
 const KEY = 'dailyBriefing.v1';
 const DEFAULTS = {
@@ -399,10 +406,12 @@ $('sSave').onclick = () => {
 $('refresh').onclick = loadAll;
 setInterval(loadAll, 15 * 60 * 1000);
 loadAll();
-signInAnonymously(auth)
-  .then(cred => loadFromCloud(cred.user))
-  .then(() => loadAll())
-  .catch(e => console.warn('Cloud sync unavailable, using local settings:', e));
+if (auth) {
+  signInAnonymously(auth)
+    .then(cred => loadFromCloud(cred.user))
+    .then(() => loadAll())
+    .catch(e => console.warn('Cloud sync unavailable, using local settings:', e));
+}
 </script>
 </body>
 </html>
