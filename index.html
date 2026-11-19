@@ -5,51 +5,119 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Daily Briefing</title>
 <style>
-:root{--bg:#0f1420;--card:#171e2e;--line:#253049;--text:#e7ecf5;--muted:#8b97b0;--accent:#5b8cff;--up:#2fbf71;--down:#ff5d6c}
+:root{
+  --bg1:#1e1b4b; --bg2:#0f172a; --bg3:#052e2b;
+  --card:rgba(30,41,59,.72); --line:rgba(148,163,184,.18);
+  --text:#f1f5f9; --muted:#94a3b8;
+  --pink:#f472b6; --amber:#fbbf24; --mint:#34d399; --sky:#60a5fa; --violet:#a78bfa; --orange:#fb923c;
+  --up:#34d399; --down:#fb7185;
+}
 *{box-sizing:border-box}
-body{margin:0;font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text)}
-header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--line)}
-h1{font-size:22px;margin:0}
+body{
+  margin:0; min-height:100vh;
+  font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color:var(--text);
+  background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 45%,var(--bg3) 100%) fixed;
+}
+header{
+  display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+  padding:22px 24px;border-bottom:1px solid var(--line);
+  background:rgba(15,23,42,.5);backdrop-filter:blur(8px);position:sticky;top:0;z-index:5;
+}
+h1{
+  font-size:28px;margin:0;font-weight:800;letter-spacing:-.01em;
+  background:linear-gradient(90deg,var(--pink),var(--amber),var(--mint),var(--sky));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
 .sub{color:var(--muted);font-size:13px}
 .btns{display:flex;gap:8px}
-button{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:7px 12px;cursor:pointer;font:inherit}
-button:hover{border-color:var(--accent)}
-button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button{
+  background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--line);
+  border-radius:999px;padding:8px 16px;cursor:pointer;font:inherit;font-weight:600;transition:all .15s;
+}
+button:hover{border-color:var(--pink);transform:translateY(-1px)}
+button.primary{background:linear-gradient(90deg,var(--pink),var(--violet));border:0;color:#fff}
 main{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;padding:20px 24px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0}
+.card{
+  --c:var(--sky);
+  background:var(--card);border:1px solid var(--line);border-top:3px solid var(--c);
+  border-radius:16px;padding:18px;min-width:0;
+  box-shadow:0 8px 30px rgba(0,0,0,.25);backdrop-filter:blur(6px);
+  transition:transform .15s, box-shadow .15s;
+}
+.card:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(0,0,0,.35)}
 .card.wide{grid-column:1/-1}
-.card h2{font-size:13px;margin:0 0 12px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-.big{font-size:44px;font-weight:600;line-height:1.1}
-.err{color:var(--down);font-size:13px}
+#stocks{--c:var(--mint)}
+#deals{--c:var(--orange)}
+#news{--c:var(--pink)}
+.card h2{
+  font-size:13px;margin:0 0 12px;display:flex;justify-content:space-between;align-items:center;
+  color:var(--c);text-transform:uppercase;letter-spacing:.08em;font-weight:800;
+}
+/* Weather card gets a full gradient */
+#weather{
+  --c:#ffffff;
+  background:linear-gradient(135deg,#0ea5e9 0%,#6366f1 55%,#d946ef 100%);
+  border:0;color:#fff;
+}
+#weather h2{color:#fff}
+#weather .muted{color:rgba(255,255,255,.85)}
+.big{font-size:48px;font-weight:800;line-height:1.05;text-shadow:0 2px 12px rgba(0,0,0,.2)}
+.err{color:var(--down);font-size:13px;font-weight:600}
 .muted{color:var(--muted);font-size:13px}
-.days{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px}
-.day{background:var(--bg);border-radius:10px;padding:10px;text-align:center;font-size:13px}
-.day .ic{font-size:22px}
+.days{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:16px}
+.day{
+  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);
+  border-radius:14px;padding:12px 8px;text-align:center;font-size:13px;font-weight:600;
+}
+.day .ic{font-size:26px;margin:4px 0}
 table{width:100%;border-collapse:collapse}
-td,th{padding:8px 4px;border-bottom:1px solid var(--line);text-align:left}
-th{color:var(--muted);font-weight:500;font-size:12px}
+td,th{padding:9px 4px;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
 td.r,th.r{text-align:right}
-.up{color:var(--up)} .down{color:var(--down)}
+tbody tr:hover{background:rgba(255,255,255,.03)}
+.up,.down{
+  display:inline-block;padding:2px 9px;border-radius:999px;font-weight:700;font-size:13px;
+}
+.up{color:#052e1a;background:var(--up)}
+.down{color:#4c0519;background:var(--down)}
 ul.list{list-style:none;margin:0;padding:0}
-ul.list li{padding:10px 0;border-bottom:1px solid var(--line)}
+ul.list li{padding:11px 0 11px 18px;border-bottom:1px solid var(--line);position:relative}
 ul.list li:last-child{border-bottom:0}
-ul.list a{color:var(--text);text-decoration:none}
-ul.list a:hover{color:var(--accent)}
-.src{font-size:12px;color:var(--muted)}
-.row{display:flex;gap:8px;margin-top:12px}
-input{flex:1;min-width:0;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:inherit}
-dialog{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:14px;padding:22px;width:min(440px,92vw)}
-dialog::backdrop{background:rgba(0,0,0,.6)}
-dialog label{display:block;margin:12px 0 4px;font-size:13px;color:var(--muted)}
+ul.list li::before{
+  content:"";position:absolute;left:0;top:18px;width:8px;height:8px;border-radius:50%;background:var(--c);
+  box-shadow:0 0 8px var(--c);
+}
+ul.list a{color:var(--text);text-decoration:none;font-weight:600}
+ul.list a:hover{color:var(--c)}
+.src{font-size:12px;color:var(--muted);margin-top:2px}
+.row{display:flex;gap:8px;margin-top:14px}
+input{
+  flex:1;min-width:0;background:rgba(15,23,42,.6);color:var(--text);
+  border:1px solid var(--line);border-radius:10px;padding:9px 12px;font:inherit;
+}
+input:focus{outline:none;border-color:var(--mint);box-shadow:0 0 0 3px rgba(52,211,153,.2)}
+#stocks .row button{background:linear-gradient(90deg,var(--mint),var(--sky));border:0;color:#052e1a}
+dialog{
+  background:#1e293b;color:var(--text);border:1px solid var(--line);border-radius:18px;
+  padding:24px;width:min(440px,92vw);box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+dialog::backdrop{background:rgba(2,6,23,.7);backdrop-filter:blur(3px)}
+dialog label{display:block;margin:14px 0 5px;font-size:13px;color:var(--muted)}
 dialog input{width:100%}
-.x{background:none;border:0;color:var(--muted);padding:0 4px}
-@media (max-width:640px){.days{grid-template-columns:repeat(3,1fr)}}
+.x{background:none;border:0;color:var(--muted);padding:0 6px;font-size:16px;border-radius:6px}
+.x:hover{color:var(--down);transform:none}
+@media (max-width:640px){
+  .days{grid-template-columns:repeat(3,1fr)}
+  h1{font-size:23px}
+  main{padding:14px}
+}
 </style>
 </head>
 <body>
 <header>
   <div>
-    <h1>Daily Briefing</h1>
+    <h1>Daily Briefing ✨</h1>
     <div class="sub" id="date"></div>
     <div class="sub" id="loc">Locating…</div>
   </div>
@@ -61,12 +129,12 @@ dialog input{width:100%}
 
 <main>
   <section class="card wide" id="weather">
-    <h2>Weather <span class="muted" id="wStamp"></span></h2>
+    <h2>☀️ Weather <span class="muted" id="wStamp"></span></h2>
     <div class="content">Loading…</div>
   </section>
 
   <section class="card" id="stocks">
-    <h2>Stocks</h2>
+    <h2>📈 Stocks</h2>
     <div class="content">Loading…</div>
     <div class="row">
       <input id="symIn" placeholder="Add ticker, e.g. TSLA" maxlength="10">
@@ -75,18 +143,18 @@ dialog input{width:100%}
   </section>
 
   <section class="card" id="deals">
-    <h2>Top deals</h2>
+    <h2>🔥 Top deals</h2>
     <div class="content">Loading…</div>
   </section>
 
   <section class="card wide" id="news">
-    <h2>Headlines</h2>
+    <h2>📰 Headlines</h2>
     <div class="content">Loading…</div>
   </section>
 </main>
 
 <dialog id="dlg">
-  <h2 style="font-size:16px;margin:0 0 4px">Settings</h2>
+  <h2 style="font-size:17px;margin:0 0 4px">Settings</h2>
   <label>City (leave blank to use your current location)</label>
   <input id="sCity" placeholder="e.g. Ashburn, VA">
   <label>Finnhub API key (free at finnhub.io, used for stock quotes)</label>
@@ -108,7 +176,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebas
 import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
-// Replace apiKey and appId with the values from Project settings → Your apps
+// Values are filled in at deploy time from GitHub secrets (see .github/workflows/pages.yml)
 const firebaseConfig = {
   apiKey: "__FIREBASE_API_KEY__",
   authDomain: "daily-briefing-7939b.firebaseapp.com",
@@ -216,11 +284,11 @@ async function loadWeather() {
   }).join('');
   box.innerHTML = `
     <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
-      <div style="font-size:52px">${icon}</div>
+      <div style="font-size:60px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.2))">${icon}</div>
       <div>
         <div class="big">${Math.round(c.temperature_2m)}°F</div>
-        <div class="muted">${esc(label)} · feels ${Math.round(c.apparent_temperature)}° · humidity ${c.relative_humidity_2m}% · wind ${Math.round(c.wind_speed_10m)} mph</div>
-        <div class="muted">${esc(loc.name)}</div>
+        <div>${esc(label)} · feels ${Math.round(c.apparent_temperature)}° · humidity ${c.relative_humidity_2m}% · wind ${Math.round(c.wind_speed_10m)} mph</div>
+        <div class="muted">📍 ${esc(loc.name)}</div>
       </div>
     </div>
     <div class="days">${days}</div>`;
@@ -244,8 +312,8 @@ async function loadStocks() {
       const rm = `<button class="x" data-rm="${esc(r.sym)}" title="Remove">×</button>`;
       if (!r.ok) return `<tr><td>${esc(r.sym)}</td><td class="r muted" colspan="2">not found</td><td class="r">${rm}</td></tr>`;
       const cls = r.chg >= 0 ? 'up' : 'down', sign = r.chg >= 0 ? '+' : '';
-      return `<tr><td><b>${esc(r.sym)}</b></td><td class="r">$${r.price.toFixed(2)}</td>
-        <td class="r ${cls}">${sign}${r.chg.toFixed(2)} (${sign}${r.pct.toFixed(2)}%)</td><td class="r">${rm}</td></tr>`;
+      return `<tr><td><b>${esc(r.sym)}</b></td><td class="r"><b>$${r.price.toFixed(2)}</b></td>
+        <td class="r"><span class="${cls}">${sign}${r.chg.toFixed(2)} (${sign}${r.pct.toFixed(2)}%)</span></td><td class="r">${rm}</td></tr>`;
     }).join('')}
   </tbody></table>`;
 }
@@ -325,15 +393,16 @@ $('sSave').onclick = () => {
   dlg.close();
   loadAll();
 };
-try {
-  const cred = await signInAnonymously(auth);
-  await loadFromCloud(cred.user);
-} catch (e) {
-  console.warn('Cloud sync unavailable, using local settings:', e);
-}
+
+// Start the page right away. Firebase sign-in runs in the background, so a
+// sign-in failure can't leave the page stuck on "Loading…".
 $('refresh').onclick = loadAll;
 setInterval(loadAll, 15 * 60 * 1000);
 loadAll();
+signInAnonymously(auth)
+  .then(cred => loadFromCloud(cred.user))
+  .then(() => loadAll())
+  .catch(e => console.warn('Cloud sync unavailable, using local settings:', e));
 </script>
 </body>
 </html>
